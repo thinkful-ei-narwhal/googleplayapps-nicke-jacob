@@ -6,41 +6,49 @@ const app = express();
 
 app.get('/apps', (req, res) => {
   const sort = req.query.sort;
-  const genres = req.query.genre;
+  const genre = req.query.genre;
 
-  let playStoreSorted = [];
-
+  let result = [...PlayStore];
+  // let genresSorted = [];
   if (sort) {
     if (sort !== 'Rating' && sort !== 'App') {
       res.status(400).send('supply correct values to sort.');
     }
 
     if (sort === 'Rating') {
-      playStoreSorted = PlayStore.sort((a, b) => {
+      result = result.sort((a, b) => {
         return a[sort] < b[sort] ? 1 : a[sort] > b[sort] ? -1 : 0;
       });
 
     }
 
     if (sort === 'App') {
-      playStoreSorted = PlayStore.sort((a, b) => {
+      result = result.sort((a, b) => {
         return a[sort] < b[sort] ? 1 : a[sort] > b[sort] ? -1 : 0;
       });
     }
   }
+  if(genre) {
+    // console.log(result.Genres)
+  // Genres here
+  if (!['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'].includes(genre)) {
+    //Values: one of ['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card']
 
+      return res 
+        .status(400)
+        .send('Genre must include valid genre')
+  }
+    else {
+      console.log(genre)
+      result = result.filter(result => result.Genres.toLowerCase().includes(genre.toLowerCase()))
 
+    }
+  
 
-  //Genres here
-  // if (genres) {
-  //   //Values: one of ['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card']
-  //   if () 
-  // }
-
-
+  }
   // res.status(500).send('Oops! You did it again.');
 
-  res.status(200).json(playStoreSorted);
+  res.status(200).json(result);
   //default
   // res.status(200).send(res.json(PlayStore)); //incorrect
 });
